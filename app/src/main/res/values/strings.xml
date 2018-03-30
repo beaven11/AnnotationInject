@@ -1,0 +1,9 @@
+<resources>
+  <string name="app_name">TestApp</string>
+  <string name="app_bottom_layout_behavior" translatable="false">com.beaven.testapp.view.one.BottomLayoutBehavior</string>
+  <string name="app_two_recycler_behavior" translatable="false">com.beaven.testapp.view.two.TwoRecyclerBehavior</string>
+  <string name="app_two_image_behavior" translatable="false">com.beaven.testapp.view.two.TwoImageBehavior</string>
+
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
