@@ -23,9 +23,13 @@ import javax.lang.model.type.TypeMirror;
  */
 public class InjectFile {
 
-    static final String ACTIVITY_TYPE = "android.app.Activity";
+    private static final String ACTIVITY_TYPE = "android.app.Activity";
 
-    static final String FRAGMENT_TYPE = "android.support.v4.app.Fragment";
+    private static final String FRAGMENT_TYPE = "android.support.v4.app.Fragment";
+
+    private static final ClassName VIEW_GROUP = ClassName.get("android.view", "ViewGroup");
+
+    private static final ClassName VIEW = ClassName.get("android.view", "View");
 
     public static InjectFile getInjectFile() {
         return SingleHolder.injectFile;
@@ -54,7 +58,7 @@ public class InjectFile {
     private TypeSpec buildTypeSpec(VariableInfo info) {
         return TypeSpec.classBuilder(getPackageName(info.getTypeElement()).simpleName())
                 .addModifiers(Modifier.PUBLIC)
-                .addField(getTargetTypeName(info.getTypeElement()), "target", Modifier.PRIVATE)
+                //.addField(getTargetTypeName(info.getTypeElement()), "target", Modifier.PRIVATE)
                 .addMethod(createConstructor(info))
                 .build();
     }
@@ -63,12 +67,17 @@ public class InjectFile {
      * 创建view注入函数
      */
     private MethodSpec createConstructor(VariableInfo info) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("createConstructor");
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("layout")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addParameter(getTargetTypeName(info.getTypeElement()), "target");
         TypeMirror typeMirror = info.getTypeElement().asType();
         if (isSubtypeOfType(typeMirror, ACTIVITY_TYPE)) {
-
+            builder.addStatement("target.setContentView($L)", info.getLayoutId());
         } else if (isSubtypeOfType(typeMirror, FRAGMENT_TYPE)) {
-
+            builder.returns(VIEW);
+            builder.addParameter(VIEW_GROUP, "viewGroup");
+            builder.addStatement("return target.getLayoutInflater().inflate($L,viewGroup)",
+                    info.getLayoutId());
         }
         return builder.build();
     }
@@ -78,7 +87,7 @@ public class InjectFile {
         return TypeName.get(typeMirror);
     }
 
-    static boolean isSubtypeOfType(TypeMirror typeMirror, String otherType) {
+    private static boolean isSubtypeOfType(TypeMirror typeMirror, String otherType) {
         if (isTypeEqual(typeMirror, otherType)) {
             return true;
         }

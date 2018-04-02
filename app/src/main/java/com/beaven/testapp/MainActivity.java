@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import com.beaven.testapp.test.MainModule;
 import com.beaven.testapp.test.TitleBar;
-import com.beaven.testapp.view.two.TestTwoActivity;
 import javax.inject.Inject;
+import mejust.com.annotations.InjectLayout;
 import mejust.com.inject.LayoutId;
 
 @LayoutId(R.layout.activity_main)
@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
+        InjectLayout.injectActivity(this);
         TestApplication.getAppComponent().mainComponent(new MainModule()).inject(this);
         buttonOne = findViewById(R.id.button_one);
         buttonTwo = findViewById(R.id.button_two);
@@ -71,6 +72,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(this, TestTwoActivity.class));
+        startActivity(new Intent(this, SecondActivity.class));
     }
 }

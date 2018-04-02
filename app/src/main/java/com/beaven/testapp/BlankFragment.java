@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import mejust.com.annotations.InjectLayout;
 import mejust.com.inject.LayoutId;
 
 /**
@@ -21,6 +22,7 @@ public class BlankFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_blank, container);
+        //return inflater.inflate(R.layout.fragment_blank, container);
+        return InjectLayout.injectFragment(this, container);
     }
 }

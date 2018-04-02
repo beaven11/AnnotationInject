@@ -14,6 +14,9 @@ public class SecondActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.layout_frame, new BlankFragment())
+                .commit();
         Log.i(TAG, "onCreate: ");
     }
 

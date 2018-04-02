@@ -17,20 +17,28 @@ import java.lang.reflect.Method;
 public class InjectLayout {
 
     public static void injectActivity(Activity activity) {
+        try {
+            Class cls = getLayoutId(activity.getClass());
+            Method method = cls.getDeclaredMethod("layout", activity.getClass());
+            method.invoke(null, activity);
+        } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     public static View injectFragment(Fragment fragment, ViewGroup container) {
-        return container;
+        try {
+            Class cls = getLayoutId(fragment.getClass());
+            Method method = cls.getDeclaredMethod("layout", fragment.getClass(), ViewGroup.class);
+            return (View) method.invoke(null, fragment, container);
+        } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    private static int getLayoutId(Class host) {
+    private static Class getLayoutId(Class host) throws ClassNotFoundException {
         String fullName = host.getName() + "_InjectLayout";
-        try {
-            Class cls = Class.forName(fullName);
-            Method layoutId = cls.getDeclaredMethod("getLayoutId");
-            return (int) layoutId.invoke(null);
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            throw new IllegalArgumentException("layoutId is error");
-        }
+        return Class.forName(fullName);
     }
 }
