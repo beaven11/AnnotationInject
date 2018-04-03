@@ -17,15 +17,7 @@ public class VariableInfo {
         return layoutId;
     }
 
-    public void setLayoutId(int layoutId) {
-        this.layoutId = layoutId;
-    }
-
     public TypeElement getTypeElement() {
         return typeElement;
-    }
-
-    public void setTypeElement(TypeElement typeElement) {
-        this.typeElement = typeElement;
     }
 }

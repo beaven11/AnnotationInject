@@ -2,18 +2,19 @@ package com.beaven.testapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import com.beaven.testapp.base.BaseActivity;
+import mejust.com.inject.LayoutId;
 
-public class SecondActivity extends AppCompatActivity {
+@LayoutId(R.layout.activity_second)
+public class SecondActivity extends BaseActivity {
 
     private static final String TAG = "SecondActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_second);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.layout_frame, new BlankFragment())
                 .commit();

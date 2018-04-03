@@ -59,14 +59,14 @@ public class InjectFile {
         return TypeSpec.classBuilder(getPackageName(info.getTypeElement()).simpleName())
                 .addModifiers(Modifier.PUBLIC)
                 //.addField(getTargetTypeName(info.getTypeElement()), "target", Modifier.PRIVATE)
-                .addMethod(createConstructor(info))
+                .addMethod(createLayoutMethod(info))
                 .build();
     }
 
     /**
      * 创建view注入函数
      */
-    private MethodSpec createConstructor(VariableInfo info) {
+    private MethodSpec createLayoutMethod(VariableInfo info) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("layout")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addParameter(getTargetTypeName(info.getTypeElement()), "target");
@@ -75,8 +75,8 @@ public class InjectFile {
             builder.addStatement("target.setContentView($L)", info.getLayoutId());
         } else if (isSubtypeOfType(typeMirror, FRAGMENT_TYPE)) {
             builder.returns(VIEW);
-            builder.addParameter(VIEW_GROUP, "viewGroup");
-            builder.addStatement("return target.getLayoutInflater().inflate($L,viewGroup)",
+            //builder.addParameter(VIEW_GROUP, "viewGroup");
+            builder.addStatement("return target.getLayoutInflater().inflate($L,null)",
                     info.getLayoutId());
         }
         return builder.build();

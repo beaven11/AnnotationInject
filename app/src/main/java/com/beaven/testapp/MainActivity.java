@@ -2,18 +2,17 @@ package com.beaven.testapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import com.beaven.testapp.base.BasePresenterActivity;
 import com.beaven.testapp.test.MainModule;
 import com.beaven.testapp.test.TitleBar;
 import javax.inject.Inject;
-import mejust.com.annotations.InjectLayout;
 import mejust.com.inject.LayoutId;
 
 @LayoutId(R.layout.activity_main)
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BasePresenterActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
-        InjectLayout.injectActivity(this);
+        //InjectLayout.injectActivity(this);
         TestApplication.getAppComponent().mainComponent(new MainModule()).inject(this);
         buttonOne = findViewById(R.id.button_one);
         buttonTwo = findViewById(R.id.button_two);
