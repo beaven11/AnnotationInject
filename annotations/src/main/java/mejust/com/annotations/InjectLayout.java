@@ -3,6 +3,7 @@ package mejust.com.annotations;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.view.ViewGroup;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -25,11 +26,11 @@ public class InjectLayout {
         }
     }
 
-    public static View injectFragment(Fragment fragment) {
+    public static View injectFragment(Fragment fragment, ViewGroup viewGroup) {
         try {
             Class cls = getLayoutId(fragment.getClass());
-            Method method = cls.getDeclaredMethod("layout", fragment.getClass());
-            return (View) method.invoke(null, fragment);
+            Method method = cls.getDeclaredMethod("layout", fragment.getClass(), ViewGroup.class);
+            return (View) method.invoke(null, fragment, viewGroup);
         } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException e) {
             throw new IllegalArgumentException("layout Id is not init,please check layout id");
         }

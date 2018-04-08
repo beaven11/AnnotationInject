@@ -75,8 +75,8 @@ public class InjectFile {
             builder.addStatement("target.setContentView($L)", info.getLayoutId());
         } else if (isSubtypeOfType(typeMirror, FRAGMENT_TYPE)) {
             builder.returns(VIEW);
-            //builder.addParameter(VIEW_GROUP, "viewGroup");
-            builder.addStatement("return target.getLayoutInflater().inflate($L,null)",
+            builder.addParameter(VIEW_GROUP, "viewGroup");
+            builder.addStatement("return target.getLayoutInflater().inflate($L,viewGroup,false)",
                     info.getLayoutId());
         }
         return builder.build();
