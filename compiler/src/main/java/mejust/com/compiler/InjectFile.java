@@ -39,14 +39,14 @@ public class InjectFile {
         private static final InjectFile injectFile = new InjectFile();
     }
 
-    public JavaFile brewJava(VariableInfo info) {
-        return JavaFile.builder(getPackageName(info.getTypeElement()).packageName(),
+    public JavaFile brewJava(InjectInfo info) {
+        return JavaFile.builder(getPackageClassName(info.getTypeElement()).packageName(),
                 buildTypeSpec(info))
                 .addFileComment("Generated code from Inject Layout. Do not modify!")
                 .build();
     }
 
-    private ClassName getPackageName(TypeElement typeElement) {
+    private ClassName getPackageClassName(TypeElement typeElement) {
         String packageName = MoreElements.getPackage(typeElement).getQualifiedName().toString();
         String className = typeElement.getQualifiedName()
                 .toString()
@@ -55,22 +55,46 @@ public class InjectFile {
         return ClassName.get(packageName, className + "_InjectLayout");
     }
 
-    private TypeSpec buildTypeSpec(VariableInfo info) {
-        return TypeSpec.classBuilder(getPackageName(info.getTypeElement()).simpleName())
+    private TypeSpec buildTypeSpec(InjectInfo info) {
+        TypeSpec.Builder builder =
+                TypeSpec.classBuilder(getPackageClassName(info.getTypeElement()).simpleName())
+                        .addModifiers(Modifier.PUBLIC)
+                        .addField(getTargetTypeName(info.getTypeElement()), "target",
+                                Modifier.PRIVATE)
+                        .addMethod(constructor(info));
+        LayoutInfo layoutInfo = info.getLayoutInfo();
+        if (layoutInfo != null) {
+            builder.addMethod(createLayoutMethod(info.getTypeElement(), layoutInfo));
+        }
+        return builder.build();
+    }
+
+    /**
+     * 创建构造函数
+     */
+    private MethodSpec constructor(InjectInfo info) {
+        MethodSpec.Builder builder = MethodSpec.constructorBuilder()
+                .addParameter(getTargetTypeName(info.getTypeElement()), "target")
                 .addModifiers(Modifier.PUBLIC)
-                //.addField(getTargetTypeName(info.getTypeElement()), "target", Modifier.PRIVATE)
-                .addMethod(createLayoutMethod(info))
-                .build();
+                .addStatement("this.target = target");
+        TitleBarSettingInfo titleBarSettingInfo = info.getTitleBarSettingInfo();
+        if (titleBarSettingInfo != null) {
+            builder.addStatement("target.topBarSettingBuilder.setTitleTextContext($S)",
+                    titleBarSettingInfo.getTextValue())
+                    .addStatement(
+                            "target.topBar.setTopBarSetting(target.topBarSettingBuilder.build())");
+        }
+        return builder.build();
     }
 
     /**
      * 创建view注入函数
      */
-    private MethodSpec createLayoutMethod(VariableInfo info) {
+    private MethodSpec createLayoutMethod(TypeElement typeElement, LayoutInfo info) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("layout")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addParameter(getTargetTypeName(info.getTypeElement()), "target");
-        TypeMirror typeMirror = info.getTypeElement().asType();
+                .addParameter(getTargetTypeName(typeElement), "target");
+        TypeMirror typeMirror = typeElement.asType();
         if (isSubtypeOfType(typeMirror, ACTIVITY_TYPE)) {
             builder.addStatement("target.setContentView($L)", info.getLayoutId());
         } else if (isSubtypeOfType(typeMirror, FRAGMENT_TYPE)) {

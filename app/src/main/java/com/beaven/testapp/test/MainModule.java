@@ -11,10 +11,4 @@ import dagger.Module;
  */
 @Module
 public class MainModule extends ActivityModule {
-
-    @Override
-    TitleBar getTitle(TitleBar titleBar) {
-        titleBar.setTitle("MainTitle");
-        return titleBar;
-    }
 }

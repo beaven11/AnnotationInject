@@ -1,7 +1,6 @@
 package com.beaven.testapp.test;
 
 import dagger.Module;
-import dagger.Provides;
 
 /**
  * 创建时间: 2018/03/28 16:27<br>
@@ -13,11 +12,4 @@ import dagger.Provides;
 @Module
 public abstract class ActivityModule {
 
-    @ActivityScope
-    @Provides
-    public TitleBar provideTitleBar(@AppTitle TitleBar titleBar) {
-        return getTitle(titleBar);
-    }
-
-    abstract TitleBar getTitle(TitleBar titleBar);
 }

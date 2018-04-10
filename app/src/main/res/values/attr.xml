@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <attr format="reference" name="top_bar_style"/>
+
+  <declare-styleable name="TopBar">
+    <attr format="dimension" name="frame_topBar_height"/>
+    <attr format="color" name="frame_topBar_background_color"/>
+    <attr format="dimension" name="frame_topBar_padding"/>
+    <attr format="color" name="frame_topBar_title_color"/>
+    <attr format="dimension" name="frame_topBar_title_size"/>
+    <attr format="dimension" name="frame_topBar_menu_icon_size"/>
+    <attr format="color" name="frame_topBar_menu_text_color"/>
+    <attr format="dimension" name="frame_topBar_menu_text_size"/>
+  </declare-styleable>
+
+</resources>

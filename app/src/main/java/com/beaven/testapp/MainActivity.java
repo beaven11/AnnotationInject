@@ -6,11 +6,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import com.beaven.testapp.base.BasePresenterActivity;
-import com.beaven.testapp.test.MainModule;
-import com.beaven.testapp.test.TitleBar;
-import javax.inject.Inject;
+import com.beaven.testapp.title.TopBar;
+import mejust.com.annotations.InjectLayout;
 import mejust.com.inject.LayoutId;
+import mejust.com.inject.TitleBarSetting;
 
+@TitleBarSetting(titleValue = "首页")
 @LayoutId(R.layout.activity_main)
 public class MainActivity extends BasePresenterActivity implements View.OnClickListener {
 
@@ -20,22 +21,23 @@ public class MainActivity extends BasePresenterActivity implements View.OnClickL
     private Button buttonTwo;
     private Button buttonThree;
 
-    @Inject
-    TitleBar titleBar;
+    TopBar topBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-        //InjectLayout.injectActivity(this);
-        TestApplication.getAppComponent().mainComponent(new MainModule()).inject(this);
+        //TestApplication.getAppComponent().mainComponent(new MainModule()).inject(this);
         buttonOne = findViewById(R.id.button_one);
         buttonTwo = findViewById(R.id.button_two);
         buttonThree = findViewById(R.id.button_three);
+        topBar = findViewById(R.id.top_bar);
+        InjectLayout.injectTitleBar(this);
         buttonOne.setOnClickListener(this);
         buttonTwo.setOnClickListener(this);
         buttonThree.setOnClickListener(this);
         Log.i(TAG, "onCreate: ");
+        //topBar.setTopBarSetting(topBarSettingBuilder.build());
+        Log.i(TAG, "onCreate: ---" + topBar.getTopBarSetting());
     }
 
     @Override
@@ -48,7 +50,6 @@ public class MainActivity extends BasePresenterActivity implements View.OnClickL
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: ");
-        Log.i(TAG, "onResume: titleBar---" + titleBar);
     }
 
     @Override

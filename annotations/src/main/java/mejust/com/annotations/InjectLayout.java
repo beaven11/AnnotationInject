@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -23,6 +24,18 @@ public class InjectLayout {
             method.invoke(null, activity);
         } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException e) {
             throw new IllegalArgumentException("layout Id is not init,please check layout id");
+        }
+    }
+
+    public static void injectTitleBar(Activity activity) {
+        try {
+            Constructor constructor =
+                    getLayoutId(activity.getClass()).getConstructor(activity.getClass());
+            constructor.newInstance(activity);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("layout Id is not init,please check layout id");
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            e.printStackTrace();
         }
     }
 

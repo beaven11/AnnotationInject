@@ -3,7 +3,9 @@ package mejust.com.compiler;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.JavaFile;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -15,11 +17,13 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import mejust.com.inject.LayoutId;
+import mejust.com.inject.TitleBarSetting;
 
 @AutoService(Processor.class)
 public class ViewInjectProcessor extends AbstractProcessor {
 
-    private Set<VariableInfo> variableInfoSet = new HashSet<>();
+    private Map<TypeElement, InjectInfo> injectInfoMap = new HashMap<>();
+
     private Filer filer;
 
     @Override
@@ -32,6 +36,7 @@ public class ViewInjectProcessor extends AbstractProcessor {
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> annotationTypes = new HashSet<>();
         annotationTypes.add("mejust.com.inject.LayoutId");
+        annotationTypes.add("mejust.com.inject.TitleBarSetting");
         return annotationTypes;
     }
 
@@ -48,23 +53,46 @@ public class ViewInjectProcessor extends AbstractProcessor {
     }
 
     private void collectionInfo(RoundEnvironment roundEnvironment) {
-        variableInfoSet.clear();
-        Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(LayoutId.class);
-        for (Element element : elements) {
+        injectInfoMap.clear();
+        Set<? extends Element> layoutElements =
+                roundEnvironment.getElementsAnnotatedWith(LayoutId.class);
+        for (Element element : layoutElements) {
             int layoutId = element.getAnnotation(LayoutId.class).value();
             TypeElement typeElement = (TypeElement) element;
-            variableInfoSet.add(new VariableInfo(layoutId, typeElement));
+            InjectInfo injectInfo = new InjectInfo(typeElement);
+            injectInfo.setLayoutInfo(new LayoutInfo(layoutId));
+            injectInfoMap.put(typeElement, injectInfo);
+        }
+        Set<? extends Element> titleBarSettingElements =
+                roundEnvironment.getElementsAnnotatedWith(TitleBarSetting.class);
+        for (Element element : titleBarSettingElements) {
+            String titleValue = element.getAnnotation(TitleBarSetting.class).titleValue();
+            int textColor = element.getAnnotation(TitleBarSetting.class).textColor();
+            float textSize = element.getAnnotation(TitleBarSetting.class).textSize();
+            int background = element.getAnnotation(TitleBarSetting.class).background();
+            boolean hideBack = element.getAnnotation(TitleBarSetting.class).hideBack();
+            TypeElement typeElement = (TypeElement) element;
+            TitleBarSettingInfo titleBarSettingInfo =
+                    new TitleBarSettingInfo(titleValue, textColor, textSize, background, hideBack);
+            InjectInfo injectInfo = injectInfoMap.get(typeElement);
+            if (injectInfo == null) {
+                injectInfo = new InjectInfo(typeElement);
+            }
+            injectInfo.setTitleBarSettingInfo(titleBarSettingInfo);
+            injectInfoMap.put(typeElement, injectInfo);
         }
     }
 
     private void writeToFile() {
-        for (VariableInfo info : variableInfoSet) {
-            JavaFile javaFile = InjectFile.getInjectFile().brewJava(info);
+        for (Map.Entry<TypeElement, InjectInfo> entry : injectInfoMap.entrySet()) {
+            TypeElement typeElement = entry.getKey();
+            InjectInfo injectInfo = entry.getValue();
+            JavaFile javaFile = InjectFile.getInjectFile().brewJava(injectInfo);
             try {
                 javaFile.writeTo(filer);
             } catch (IOException e) {
-                error(info.getTypeElement(), "Unable to write binding for type %s: %s",
-                        info.getTypeElement(), e.getMessage());
+                error(typeElement, "Unable to write binding for type %s: %s", typeElement,
+                        e.getMessage());
             }
         }
     }
