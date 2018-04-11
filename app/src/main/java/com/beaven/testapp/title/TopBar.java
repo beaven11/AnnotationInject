@@ -112,7 +112,7 @@ public class TopBar extends LinearLayout {
      */
     public void setTopBarSetting(TopBarSetting topBarSetting) {
         this.topBarSetting = topBarSetting;
-        if (topBarSetting.getBackgroundColor() != -1) {
+        if (topBarSetting.getBackgroundColor() != 0) {
             setBackgroundColor(topBarSetting.getBackgroundColor());
         }
         setCenterTitle(topBarSetting.getTitleTextContent(), topBarSetting.getTitleTextSize(),
@@ -139,16 +139,16 @@ public class TopBar extends LinearLayout {
                     .setTitleTextColor(centerTitleColor)
                     .build();
         }
-        int backgroundColorSetting = topBarSetting.getBackgroundColor() == -1 ? barColor
+        int backgroundColorSetting = topBarSetting.getBackgroundColor() == 0 ? barColor
                 : topBarSetting.getBackgroundColor();
         builder.setBackgroundColor(backgroundColorSetting);
         String titleText = TextUtils.isEmpty(topBarSetting.getTitleTextContent()) ? ""
                 : topBarSetting.getTitleTextContent();
         builder.setTitleTextContext(titleText);
-        int titleTextColor = topBarSetting.getTitleTextColor() == -1 ? centerTitleColor
+        int titleTextColor = topBarSetting.getTitleTextColor() == 0 ? centerTitleColor
                 : topBarSetting.getTitleTextColor();
         builder.setTitleTextColor(titleTextColor);
-        float titleTextSize = topBarSetting.getTitleTextSize() == -1 ? centerTitleSize
+        float titleTextSize = topBarSetting.getTitleTextSize() == 0 ? centerTitleSize
                 : topBarSetting.getTitleTextSize();
         return builder.setTitleTextSize(titleTextSize)
                 .setTitleLeftFirstMenu(buildTitleMenu(topBarSetting.getTitleLeftFirstMenu()))
@@ -193,8 +193,8 @@ public class TopBar extends LinearLayout {
      */
     private void setCenterTitle(String text, float textSize, @ColorInt int textColorRes) {
         layoutToolCenter.removeAllViews();
-        int color = textColorRes == -1 ? this.centerTitleColor : textColorRes;
-        float size = textSize == -1 ? this.centerTitleSize : textSize;
+        int color = textColorRes == 0 ? this.centerTitleColor : textColorRes;
+        float size = textSize == 0 ? this.centerTitleSize : textSize;
         String content = text == null ? "" : text;
         TextView textView = new TextView(getContext());
         textView.setGravity(Gravity.CENTER);
@@ -222,8 +222,8 @@ public class TopBar extends LinearLayout {
     private FrameLayout buildToolTextLayout(String text, float textSize, int textColor,
             boolean left, OnClickListener clickListener) {
         String content = text == null ? "" : text;
-        float size = textSize == -1 ? this.menuTextSize : textSize;
-        int color = textColor == -1 ? this.menuTextColor : textColor;
+        float size = textSize == 0 ? this.menuTextSize : textSize;
+        int color = textColor == 0 ? this.menuTextColor : textColor;
         TextView textView = new TextView(getContext());
         textView.setText(content);
         textView.setTextSize(size);
@@ -309,8 +309,8 @@ public class TopBar extends LinearLayout {
     private TopBarSetting.TitleMenu buildTitleMenu(TopBarSetting.TitleMenu titleMenu) {
         if (titleMenu != null && titleMenu.getIconDrawable() == null) {
             int textColor =
-                    titleMenu.getTextColor() == -1 ? menuTextColor : titleMenu.getTextColor();
-            float textSize = titleMenu.getTextSize() == -1 ? menuTextSize : titleMenu.getTextSize();
+                    titleMenu.getTextColor() == 0 ? menuTextColor : titleMenu.getTextColor();
+            float textSize = titleMenu.getTextSize() == 0 ? menuTextSize : titleMenu.getTextSize();
             titleMenu.setTextColor(textColor);
             titleMenu.setTextSize(textSize);
         }

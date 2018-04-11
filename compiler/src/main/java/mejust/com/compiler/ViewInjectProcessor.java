@@ -67,8 +67,8 @@ public class ViewInjectProcessor extends AbstractProcessor {
                 roundEnvironment.getElementsAnnotatedWith(TitleBarSetting.class);
         for (Element element : titleBarSettingElements) {
             String titleValue = element.getAnnotation(TitleBarSetting.class).titleValue();
-            int textColor = element.getAnnotation(TitleBarSetting.class).textColor();
-            float textSize = element.getAnnotation(TitleBarSetting.class).textSize();
+            int textColor = element.getAnnotation(TitleBarSetting.class).titleColor();
+            float textSize = element.getAnnotation(TitleBarSetting.class).titleSize();
             int background = element.getAnnotation(TitleBarSetting.class).background();
             boolean hideBack = element.getAnnotation(TitleBarSetting.class).hideBack();
             TypeElement typeElement = (TypeElement) element;

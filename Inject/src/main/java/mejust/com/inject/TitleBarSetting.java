@@ -24,17 +24,17 @@ public @interface TitleBarSetting {
     /**
      * 文字的颜色
      */
-    int textColor() default -1;
+    int titleColor() default 0;
 
     /**
      * 文字大小
      */
-    float textSize() default -1;
+    float titleSize() default 0;
 
     /**
      * 背景色
      */
-    int background() default -1;
+    int background() default 0;
 
     /**
      * 隐藏返回键

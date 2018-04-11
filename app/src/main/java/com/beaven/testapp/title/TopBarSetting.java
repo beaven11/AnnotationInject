@@ -1,7 +1,10 @@
 package com.beaven.testapp.title;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 /**
@@ -108,13 +111,13 @@ public class TopBarSetting {
     public static class Builder {
 
         // title背景颜色
-        private int backgroundColor = -1;
+        private int backgroundColor = 0;
         // 标题
         private String titleTextContent;
         // 标题大小
-        private float titleTextSize = -1;
+        private float titleTextSize = 0;
         // 标题颜色
-        private int titleTextColor = -1;
+        private int titleTextColor = 0;
 
         private TitleMenu titleLeftFirstMenu;
 
@@ -126,6 +129,11 @@ public class TopBarSetting {
 
         public Builder setBackgroundColor(@ColorInt int color) {
             this.backgroundColor = color;
+            return this;
+        }
+
+        public Builder setBackgroundColorRes(@ColorRes int color, Context context) {
+            this.backgroundColor = ContextCompat.getColor(context, color);
             return this;
         }
 
@@ -141,6 +149,11 @@ public class TopBarSetting {
 
         public Builder setTitleTextColor(@ColorInt int color) {
             this.titleTextColor = color;
+            return this;
+        }
+
+        public Builder setTitleTextColorRes(@ColorRes int color, Context context) {
+            this.titleTextColor = ContextCompat.getColor(context, color);
             return this;
         }
 
@@ -175,9 +188,9 @@ public class TopBarSetting {
 
         private String text;
 
-        private float textSize = -1;
+        private float textSize = 0;
 
-        private int textColor = -1;
+        private int textColor = 0;
 
         private View.OnClickListener clickListener;
 
@@ -211,6 +224,10 @@ public class TopBarSetting {
 
         public void setTextColor(@ColorInt int textColor) {
             this.textColor = textColor;
+        }
+
+        public void setTextColorRes(@ColorRes int textColor, Context context) {
+            this.textColor = ContextCompat.getColor(context, textColor);
         }
 
         public View.OnClickListener getClickListener() {

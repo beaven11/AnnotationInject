@@ -11,7 +11,7 @@ import mejust.com.annotations.InjectLayout;
 import mejust.com.inject.LayoutId;
 import mejust.com.inject.TitleBarSetting;
 
-@TitleBarSetting(titleValue = "首页")
+@TitleBarSetting(titleValue = "首页", titleColor = R.color.colorWhite, background = R.color.colorPrimary)
 @LayoutId(R.layout.activity_main)
 public class MainActivity extends BasePresenterActivity implements View.OnClickListener {
 

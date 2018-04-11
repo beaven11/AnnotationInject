@@ -79,10 +79,22 @@ public class InjectFile {
                 .addStatement("this.target = target");
         TitleBarSettingInfo titleBarSettingInfo = info.getTitleBarSettingInfo();
         if (titleBarSettingInfo != null) {
-            builder.addStatement("target.topBarSettingBuilder.setTitleTextContext($S)",
-                    titleBarSettingInfo.getTextValue())
-                    .addStatement(
-                            "target.topBar.setTopBarSetting(target.topBarSettingBuilder.build())");
+            builder.addStatement(
+                    "target.topBarSettingBuilder.setTitleTextContext($S).setTitleTextSize($Lf)",
+                    titleBarSettingInfo.getTextValue(), titleBarSettingInfo.getTextSize());
+            if (titleBarSettingInfo.getTextColor() != 0) {
+                builder.addStatement("target.topBarSettingBuilder.setTitleTextColorRes($L,target)",
+                        titleBarSettingInfo.getTextColor());
+            }
+            if (titleBarSettingInfo.getBackgroundColor() != 0) {
+                builder.addStatement("target.topBarSettingBuilder.setBackgroundColorRes($L,target)",
+                        titleBarSettingInfo.getBackgroundColor());
+            }
+            if (titleBarSettingInfo.isHideBack()) {
+                builder.addStatement("target.topBarSettingBuilder.setTitleLeftFirstMenu(null)");
+            }
+            builder.addStatement(
+                    "target.topBar.setTopBarSetting(target.topBarSettingBuilder.build())");
         }
         return builder.build();
     }
