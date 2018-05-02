@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import com.beaven.testapp.base.BaseActivity;
-import mejust.com.inject.LayoutId;
 
-@LayoutId(R.layout.activity_second)
+/**
+ * @author wangpeifeng
+ * @date 2018/05/02 16:57
+ */
 public class SecondActivity extends BaseActivity {
 
     private static final String TAG = "SecondActivity";

@@ -6,10 +6,17 @@
     <item name="colorPrimary">@color/colorPrimary</item>
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="colorAccent">@color/colorAccent</item>
+    <item name="title_bar_style">@style/titleBarStyle</item>
   </style>
 
   <style name="popup_window_anim">
     <item name="android:windowEnterAnimation">@anim/enter</item>
     <item name="android:windowExitAnimation">@anim/out</item>
+  </style>
+
+  <style name="titleBarStyle">
+    <item name="frame_title_background_color">@color/colorPrimary</item>
+    <item name="frame_title_title_color">@android:color/white</item>
+    <item name="frame_title_menu_text_color">@android:color/white</item>
   </style>
 </resources>

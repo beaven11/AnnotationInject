@@ -6,11 +6,8 @@ import com.beaven.testapp.test.DaggerAppComponent;
 import com.beaven.testapp.test.TestAppModule;
 
 /**
- * 创建时间: 2018/03/28 15:27<br>
- * 创建人: 王培峰<br>
- * 修改人: 王培峰<br>
- * 修改时间: 2018/03/28 15:27<br>
- * 描述:
+ * @author wangpeifeng
+ * @date 2018/05/02 16:57
  */
 public class TestApplication extends Application {
 

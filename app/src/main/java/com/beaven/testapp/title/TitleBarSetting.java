@@ -4,52 +4,59 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
+import android.util.SparseArray;
 import android.view.View;
+import com.beaven.inject.TitleBarMenuLocation;
 
 /**
- * @author Beaven
+ * @author wangpeifeng
+ * @date 2018/04/18 11:07
  */
-public class TopBarSetting {
+public class TitleBarSetting {
 
-    // title背景颜色
+    /**
+     * title背景颜色
+     */
     private int backgroundColor;
-    // 标题
+    /**
+     * 标题
+     */
     private String titleTextContent;
-    // 标题大小
+    /**
+     * 标题大小
+     */
     private float titleTextSize;
-    // 标题颜色
+    /**
+     * 标题颜色
+     */
     private int titleTextColor;
+    /**
+     * 菜单列表
+     */
+    private SparseArray<TitleMenu> menuArray;
 
-    private TitleMenu titleLeftFirstMenu;
-
-    private TitleMenu titleLeftSecondMenu;
-
-    private TitleMenu titleRightFirstMenu;
-
-    private TitleMenu titleRightSecondMenu;
-
-    public TopBarSetting(Builder builder) {
+    public TitleBarSetting(Builder builder) {
         this.backgroundColor = builder.backgroundColor;
         this.titleTextContent = builder.titleTextContent;
         this.titleTextSize = builder.titleTextSize;
         this.titleTextColor = builder.titleTextColor;
-        this.titleLeftFirstMenu = builder.titleLeftFirstMenu;
-        this.titleLeftSecondMenu = builder.titleLeftSecondMenu;
-        this.titleRightFirstMenu = builder.titleRightFirstMenu;
-        this.titleRightSecondMenu = builder.titleRightSecondMenu;
+        this.menuArray = builder.menuArray;
     }
 
     public Builder newBuilder() {
         Builder builder = new Builder();
-        builder.setBackgroundColor(backgroundColor);
-        builder.setTitleLeftFirstMenu(titleLeftFirstMenu);
-        builder.setTitleLeftSecondMenu(titleLeftSecondMenu);
-        builder.setTitleRightFirstMenu(titleRightFirstMenu);
-        builder.setTitleRightSecondMenu(titleRightSecondMenu);
-        builder.setTitleTextContext(titleTextContent);
-        builder.setTitleTextSize(titleTextSize);
-        builder.setTitleTextColor(titleTextColor);
+        builder.backgroundColor = this.backgroundColor;
+        builder.titleTextContent = this.titleTextContent;
+        builder.titleTextColor = this.titleTextColor;
+        builder.titleTextSize = this.titleTextSize;
+        builder.menuArray = this.menuArray;
+        try {
+            return (Builder) builder.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
         return builder;
     }
 
@@ -69,25 +76,13 @@ public class TopBarSetting {
         return titleTextColor;
     }
 
-    public TitleMenu getTitleLeftFirstMenu() {
-        return titleLeftFirstMenu;
-    }
-
-    public TitleMenu getTitleLeftSecondMenu() {
-        return titleLeftSecondMenu;
-    }
-
-    public TitleMenu getTitleRightFirstMenu() {
-        return titleRightFirstMenu;
-    }
-
-    public TitleMenu getTitleRightSecondMenu() {
-        return titleRightSecondMenu;
+    public SparseArray<TitleMenu> getMenuArray() {
+        return menuArray;
     }
 
     @Override
     public String toString() {
-        return "TopBarSetting{"
+        return "TitleBarSetting{"
                 + "backgroundColor="
                 + backgroundColor
                 + ", titleTextContent='"
@@ -97,42 +92,29 @@ public class TopBarSetting {
                 + titleTextSize
                 + ", titleTextColor="
                 + titleTextColor
-                + ", titleLeftFirstMenu="
-                + titleLeftFirstMenu
-                + ", titleLeftSecondMenu="
-                + titleLeftSecondMenu
-                + ", titleRightFirstMenu="
-                + titleRightFirstMenu
-                + ", titleRightSecondMenu="
-                + titleRightSecondMenu
+                + ", menuArray="
+                + menuArray
                 + '}';
     }
 
-    public static class Builder {
+    public static class Builder implements Cloneable {
 
-        // title背景颜色
         private int backgroundColor = 0;
-        // 标题
+
         private String titleTextContent;
-        // 标题大小
+
         private float titleTextSize = 0;
-        // 标题颜色
+
         private int titleTextColor = 0;
 
-        private TitleMenu titleLeftFirstMenu;
-
-        private TitleMenu titleLeftSecondMenu;
-
-        private TitleMenu titleRightFirstMenu;
-
-        private TitleMenu titleRightSecondMenu;
+        private SparseArray<TitleMenu> menuArray;
 
         public Builder setBackgroundColor(@ColorInt int color) {
             this.backgroundColor = color;
             return this;
         }
 
-        public Builder setBackgroundColorRes(@ColorRes int color, Context context) {
+        public Builder setBackgroundColorRes(Context context, @ColorRes int color) {
             this.backgroundColor = ContextCompat.getColor(context, color);
             return this;
         }
@@ -152,37 +134,40 @@ public class TopBarSetting {
             return this;
         }
 
-        public Builder setTitleTextColorRes(@ColorRes int color, Context context) {
+        public Builder setTitleTextColorRes(Context context, @ColorRes int color) {
             this.titleTextColor = ContextCompat.getColor(context, color);
             return this;
         }
 
-        public Builder setTitleLeftFirstMenu(TitleMenu titleLeftFirstMenu) {
-            this.titleLeftFirstMenu = titleLeftFirstMenu;
+        public Builder addTitleMenu(TitleMenu titleMenu) {
+            if (menuArray == null) {
+                menuArray = new SparseArray<>(4);
+            }
+            if (menuArray.size() >= 4) {
+                throw new IllegalArgumentException("title menu textSize more than four");
+            }
+            int location = titleMenu.getLocation();
+            menuArray.put(location, titleMenu);
             return this;
         }
 
-        public Builder setTitleLeftSecondMenu(TitleMenu titleLeftSecondMenu) {
-            this.titleLeftSecondMenu = titleLeftSecondMenu;
-            return this;
+        public TitleBarSetting build() {
+            return new TitleBarSetting(this);
         }
 
-        public Builder setTitleRightFirstMenu(TitleMenu titleRightFirstMenu) {
-            this.titleRightFirstMenu = titleRightFirstMenu;
-            return this;
-        }
-
-        public Builder setTitleRightSecondMenu(TitleMenu titleRightSecondMenu) {
-            this.titleRightSecondMenu = titleRightSecondMenu;
-            return this;
-        }
-
-        public TopBarSetting build() {
-            return new TopBarSetting(this);
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            Builder builder = (Builder) super.clone();
+            if (menuArray != null) {
+                builder.menuArray = menuArray.clone();
+            }
+            return builder;
         }
     }
 
-    public static class TitleMenu {
+    public static class TitleMenu implements Cloneable {
+
+        private int location;
 
         private Drawable iconDrawable;
 
@@ -194,12 +179,25 @@ public class TopBarSetting {
 
         private View.OnClickListener clickListener;
 
+        public TitleMenu(@TitleBarMenuLocation int location) {
+            this.location = location;
+        }
+
+        @TitleBarMenuLocation
+        public int getLocation() {
+            return location;
+        }
+
         public Drawable getIconDrawable() {
             return iconDrawable;
         }
 
         public void setIconDrawable(Drawable iconDrawable) {
             this.iconDrawable = iconDrawable;
+        }
+
+        public void setIconDrawableRes(Context context, @DrawableRes int drawableRes) {
+            this.iconDrawable = ContextCompat.getDrawable(context, drawableRes);
         }
 
         public String getText() {
@@ -226,7 +224,7 @@ public class TopBarSetting {
             this.textColor = textColor;
         }
 
-        public void setTextColorRes(@ColorRes int textColor, Context context) {
+        public void setTextColorRes(Context context, @ColorRes int textColor) {
             this.textColor = ContextCompat.getColor(context, textColor);
         }
 
@@ -236,6 +234,11 @@ public class TopBarSetting {
 
         public void setClickListener(View.OnClickListener clickListener) {
             this.clickListener = clickListener;
+        }
+
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            return super.clone();
         }
 
         @Override

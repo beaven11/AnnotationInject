@@ -5,14 +5,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import com.beaven.inject.TitleBarConfig;
 import com.beaven.testapp.base.BasePresenterActivity;
-import com.beaven.testapp.title.TopBar;
-import mejust.com.annotations.InjectLayout;
-import mejust.com.inject.LayoutId;
-import mejust.com.inject.TitleBarSetting;
+import com.beaven.testapp.title.TitleBar;
+import com.beaven.testapp.title.TitleBarSetting;
+import com.beaven.testapp.title.TitleBarUtil;
 
-@TitleBarSetting(titleValue = "首页", titleColor = R.color.colorWhite, background = R.color.colorPrimary)
-@LayoutId(R.layout.activity_main)
+/**
+ * @author wangpeifeng
+ * @date 2018/05/02 16:57
+ */
+@TitleBarConfig(textValue = "MainActivity")
 public class MainActivity extends BasePresenterActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
@@ -21,23 +24,21 @@ public class MainActivity extends BasePresenterActivity implements View.OnClickL
     private Button buttonTwo;
     private Button buttonThree;
 
-    TopBar topBar;
+    private TitleBar titleBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TestApplication.getAppComponent().mainComponent(new MainModule()).inject(this);
+        setContentView(R.layout.activity_main);
         buttonOne = findViewById(R.id.button_one);
         buttonTwo = findViewById(R.id.button_two);
         buttonThree = findViewById(R.id.button_three);
-        topBar = findViewById(R.id.top_bar);
-        InjectLayout.injectTitleBar(this);
+        titleBar = findViewById(R.id.top_bar);
+        TitleBarUtil.inject(this, titleBar, new TitleBarSetting.Builder().build());
         buttonOne.setOnClickListener(this);
         buttonTwo.setOnClickListener(this);
         buttonThree.setOnClickListener(this);
         Log.i(TAG, "onCreate: ");
-        //topBar.setTopBarSetting(topBarSettingBuilder.build());
-        Log.i(TAG, "onCreate: ---" + topBar.getTopBarSetting());
     }
 
     @Override

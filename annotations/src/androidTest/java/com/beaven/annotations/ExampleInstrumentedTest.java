@@ -1,4 +1,4 @@
-package mejust.com.annotations;
+package com.beaven.annotations;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
